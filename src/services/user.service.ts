@@ -22,6 +22,24 @@ export class UserService {
         return bcrypt.hash(password, this._saltRounds)
             .then(hash => {
                 return User.create({  email, password: hash })
+                .then(u => this.getUserById(u!.id))
             })
+    }
+
+
+    async getUserById(id: number) {
+
+        const user = await User.findOne({ where: { id } });
+
+        return { status: 'success', data : {id: user.id, email: user.email} }
+    }
+
+    getUsers() {
+
+        const users = User.findAll()
+
+        return users
+
+        // return User.findAll()
     }
 }

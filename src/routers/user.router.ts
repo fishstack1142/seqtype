@@ -19,3 +19,8 @@ userRouter.post('/register', userRules['forRegister'], (req, res) => {
 
     return user.then(u => res.json(u))
 })
+
+userRouter.get('/users', (req, res) => {
+
+    return userService.getUsers().then(u => res.json(u))
+})
