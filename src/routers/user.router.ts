@@ -20,6 +20,19 @@ userRouter.post('/register', userRules['forRegister'], (req, res) => {
     return user.then(u => res.json(u))
 })
 
+userRouter.post('/login', userRules['forLogin'], (req, res) => {
+    const errors = validationResult(req)
+
+    if (!errors.isEmpty())
+        return res.status(422).json(errors.array())
+
+    const payload = matchedData(req) as UserAddModel
+    const token = userService.login(payload)
+
+    return token.then(t => res.json(t))
+})
+
+
 userRouter.get('/users', (req, res) => {
 
     return userService.getUsers().then(u => res.json(u))

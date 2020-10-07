@@ -26,6 +26,36 @@ export class UserService {
             })
     }
 
+    login({email}: UserAddModel) {
+        return User.findOne({ where: { email } }).then(user => {
+
+            const { id, email } = user!
+
+            return { token: jwt.sign({ id, email }, this._jwtSecret) }
+        })
+    }
+
+    verifyToken(token: string) {
+
+        console.log('verifying...')
+        return new Promise((resolve, reject) => {
+            jwt.verify(token, this._jwtSecret), (err, decoded) => {
+                if (err) {
+
+                    console.log(err)
+                    resolve(false)
+                    return
+                }
+
+                UserService._user = User.findByPk(decoded['id'])
+                console.log( UserService._user)
+                resolve(true)
+                return
+
+            }
+        }) as Promise<boolean>
+    }
+
 
     async getUserById(id: number) {
 
